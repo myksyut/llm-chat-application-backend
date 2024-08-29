@@ -3,11 +3,10 @@ from dotenv import load_dotenv
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
-from langchain_openai import AzureChatOpenAI
-from langchain_community.retrievers import AzureAISearchRetriever
+from langchain_groq import ChatGroq
 
-# OpenAI embedding model
-LLM_MODEL = "gpt-4o"
+# Grok llama model
+LLM_MODEL = "llama-3.1-70b-versatile"
 
 # Retriever settings
 TOP_K = 5
@@ -16,13 +15,10 @@ load_dotenv()
 
 # プロンプトテンプレート
 system_prompt = (
-    "You are an assistant for question-answering tasks. "
-    "Use the following pieces of retrieved context to answer "
-    "the question. If you don't know the answer, say that you "
-    "don't know. Use three sentences maximum and keep the "
-    "answer concise."
-    "\n\n"
-    "{context}"
+    '''
+    あなたは、情報の検索を支援する AI アシスタントです。
+    出力はマークダウン形式
+    '''
 )
 prompt = ChatPromptTemplate.from_messages(
     [
@@ -31,30 +27,14 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-# Documentsを整形する関数
-def doc_to_str(docs):
-    return "\n---\n".join(doc.page_content for doc in docs)
-
 # RAGチャットボットを実行
 async def chat_with_bot_async(question: str):
     # LLM
-    chat_model = AzureChatOpenAI(
-        api_version="2024-02-01",
-        temperature=0,
-        azure_deployment=LLM_MODEL,
-        streaming=True  # ストリーミングを有効化
-    )
-
-    # Vector Retriever
-    retriever = AzureAISearchRetriever(
-        content_key="chunk",
-        top_k=TOP_K,
-    )
+    chat_model = ChatGroq(model_name=LLM_MODEL)
 
     # RAG Chain
     rag_chain = (
-        {"context": retriever | doc_to_str, "question": RunnablePassthrough()}
-        | prompt
+        prompt
         | chat_model
         | StrOutputParser()
     )

@@ -9,15 +9,6 @@ from chat import chat_with_bot_async
 
 app = FastAPI()
 
-# CORSの設定
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # 本番環境では適切に制限してください
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 class ChatRequest(BaseModel):
     question: str  # 'query' から 'question' に変更
 
