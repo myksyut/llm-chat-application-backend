@@ -1,4 +1,3 @@
-# main.py
 import asyncio
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
@@ -20,12 +19,12 @@ app.add_middleware(
 )
 
 class ChatRequest(BaseModel):
-    query: str
+    question: str  # 'query' から 'question' に変更
 
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
     async def event_generator():
-        async for chunk in chat_with_bot_async(request.query):
+        async for chunk in chat_with_bot_async(request.question):
             yield f"data: {chunk}\n\n"
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

@@ -1,10 +1,5 @@
-import argparse
 import os
-import sys
-import uuid
-
 from dotenv import load_dotenv
-from langchain.retrievers import RePhraseQueryRetriever
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
@@ -16,9 +11,6 @@ LLM_MODEL = "gpt-4o"
 
 # Retriever settings
 TOP_K = 5
-
-parser = argparse.ArgumentParser()
-parser.add_argument('-q', '--query', help='Query with RRF search')
 
 load_dotenv()
 
@@ -38,12 +30,6 @@ prompt = ChatPromptTemplate.from_messages(
         ("human", "{question}"),
     ]
 )
-
-# HyDEプロンプトテンプレート
-hyde_prompt_template = """ \
-以下の質問の回答を書いてください。
-質問: {question}
-回答: """
 
 # Documentsを整形する関数
 def doc_to_str(docs):
@@ -65,19 +51,9 @@ async def chat_with_bot_async(question: str):
         top_k=TOP_K,
     )
 
-    # HyDE Prompt
-    hyde_prompt = ChatPromptTemplate.from_template(hyde_prompt_template)
-
-    # HyDE retriever
-    rephrase_retriever = RePhraseQueryRetriever.from_llm(
-        retriever=retriever,
-        llm=chat_model,
-        prompt=hyde_prompt,
-    )
-
     # RAG Chain
     rag_chain = (
-        {"context": rephrase_retriever | doc_to_str, "question": RunnablePassthrough()}
+        {"context": retriever | doc_to_str, "question": RunnablePassthrough()}
         | prompt
         | chat_model
         | StrOutputParser()
