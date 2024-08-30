@@ -29,7 +29,11 @@ async def chat_with_bot_async(question: str, history: list):
     )
     # プロンプトテンプレート
     cypher_template = """Neo4jの以下のグラプスキーマに基づいてユーザーの質問に答えるCypherクエリを書いて下さい
-    回答にクエリ以外を含めないでください
+    回答にクエリ以外を含めないでください．
+    クエリが作成できない場合は以下のクエリを返して下さい
+    MATCH (n)
+    WHERE 1=0
+    RETURN n
     スキーマ:{schema}
     質問:{question}
     Cyperクエリ:
