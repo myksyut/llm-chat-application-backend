@@ -12,7 +12,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000",
-                   "https://llm-chat-application.vercel.app/"],  # フロントエンドのURLに置き換えてください
+                   "https://llm-chat-application.vercel.app"],  # フロントエンドのURLに置き換えてください
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
