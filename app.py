@@ -19,11 +19,12 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     question: str
+    history: list
 
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
     async def event_generator():
-        async for chunk in chat_with_bot_async(request.question):
+        async for chunk in chat_with_bot_async(request.question, request.history):
             # マークダウンの改行を保持しつつ、JSON形式でエスケープ
             escaped_chunk = json.dumps({"text": chunk})
             yield f"data: {escaped_chunk}\n\n"
