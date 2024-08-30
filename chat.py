@@ -58,7 +58,7 @@ async def chat_with_bot_async(question: str, history: list):
     [
         (
             "system",
-            "入力された質問、クエリ、クエリ実行結果をもとに、自然言語の答えに変換してください。",
+            "入力された会話履歴, 質問、クエリ、クエリ実行結果をもとに、自然言語の答えに変換してください。",
         ),
         ("human", response_template),
     ]
