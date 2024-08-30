@@ -9,6 +9,14 @@ from chat import chat_with_bot_async
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # フロントエンドのURLに置き換えてください
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 class ChatRequest(BaseModel):
     question: str  # 'query' から 'question' に変更
 
