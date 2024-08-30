@@ -29,12 +29,14 @@ langsmith==0.1.106
 marshmallow==3.22.0
 multidict==6.0.5
 mypy-extensions==1.0.0
+neo4j==5.24.0
 numpy==1.26.4
 orjson==3.10.7
 packaging==24.1
 pydantic==2.8.2
 pydantic_core==2.20.1
 python-dotenv==1.0.1
+pytz==2024.1
 PyYAML==6.0.2
 requests==2.32.3
 sniffio==1.3.1
