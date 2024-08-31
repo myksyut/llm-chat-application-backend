@@ -111,9 +111,11 @@ async def chat_with_bot_async(question: str, history: list):
 
     query = await generate_query(llm, graph, question)
     yield await send_process_step(process_steps[1])
+    yield f"data: {json.dumps({'generated_query': query})}\n\n"
 
     response = await execute_query(graph, query)
     yield await send_process_step(process_steps[2])
+    yield f"data: {json.dumps({'search_results': response})}\n\n"
 
     async for chunk in generate_response(llm, question, history, query, response):
         yield chunk
