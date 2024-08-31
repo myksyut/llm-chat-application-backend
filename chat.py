@@ -109,14 +109,14 @@ async def chat_with_bot_async(question: str, history: list):
 
     llm, graph = await initialize_llm_and_graph()
 
-    yield await send_process_step(process_steps[1])
     query = await generate_query(llm, graph, question)
+    yield await send_process_step(process_steps[1])
 
-    yield await send_process_step(process_steps[2])
     response = await execute_query(graph, query)
+    yield await send_process_step(process_steps[2])
 
-    yield await send_process_step(process_steps[3])
     async for chunk in generate_response(llm, question, history, query, response):
         yield chunk
+    yield await send_process_step(process_steps[3])
 
     logger.info("Finished streaming response")
